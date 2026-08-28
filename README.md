@@ -1,8 +1,12 @@
 # ResourceWorldResetter API
 
-The stable, read-only integration contract for ResourceWorldResetter 5.1.0 and newer.
+The public, read-only integration API for ResourceWorldResetter 5.1.0 and newer. It lets Bukkit,
+Spigot, Paper, Purpur, and Folia plugins inspect RWR-managed worlds and reset activity without
+depending on RWR's internal implementation or world-provider APIs.
 
-## Dependency
+Requires Java 21 and a matching RWR runtime version on the server.
+
+## Add the dependency
 
 Maven:
 
@@ -23,10 +27,12 @@ dependencies {
 }
 ```
 
-RWR API classes are supplied by the running RWR plugin. Do not shade this artifact into a consumer
-plugin. Consumers also need their normal `compileOnly`/`provided` Bukkit or Paper API dependency.
+RWR supplies the API classes at runtime. Do not shade `rwr-api` into your plugin and do not install a
+separate API JAR on the server. Keep your Bukkit or Paper API dependency as `provided`/`compileOnly` too.
 
-## Service lookup
+## Find the service
+
+RWR registers `RwrApi` through Bukkit's `ServicesManager` after it enables successfully:
 
 ```java
 RwrApi.find(getServer()).ifPresentOrElse(api -> {
@@ -36,39 +42,34 @@ RwrApi.find(getServer()).ifPresentOrElse(api -> {
 }, () -> getLogger().warning("RWR is unavailable or not ready"));
 ```
 
-The service exists only after RWR enables successfully and is removed when RWR disables. Use the
-Bukkit services manager rather than casting RWR's plugin main class. Declare the appropriate runtime
-plugin name in `depend` when integration is mandatory, or `softdepend` and handle an absent service:
+Use `depend` when RWR is required, or `softdepend` and handle an unavailable service when integration
+is optional. The runtime plugin names are:
 
-- Spigot: `ResourceWorldResetter`
-- Paper/Folia: `ResourceWorldResetter-Paper-Folia`
+- Spigot and CraftBukkit: `ResourceWorldResetter`
+- Paper, Purpur, and Folia: `ResourceWorldResetter-Paper-Folia`
 
-World IDs are matched case-insensitively. Returned records and lists are immutable point-in-time
-snapshots. Calls are safe for concurrent reads, but consumers must still follow Bukkit's threading
-rules for their own server operations.
+The service is absent when RWR fails to start and is removed when RWR disables.
 
-## Events
+## Available information
 
-Listen for `ResourceWorldPreResetEvent` to observe or cancel a reset before it starts. Every accepted
-attempt reaches a terminal `ResourceWorldPostResetEvent`, including event cancellation and failures.
+The API provides:
 
-The API intentionally does not expose reset commands, mutable configuration, scheduler control,
-history storage, Multiverse-Core, or TheNextLvl Worlds objects.
+- immutable snapshots of managed worlds, including RWR ID, platform world name, display name,
+  operational state, and reset capability;
+- reset status containing the world, operation ID, phase, message, and active/terminal helpers;
+- case-insensitive lookup by RWR world ID;
+- `ResourceWorldPreResetEvent`, which can cancel a reset before it starts;
+- `ResourceWorldPostResetEvent`, which reports successful, failed, cancelled, and interrupted outcomes.
+
+Returned records and collections are immutable point-in-time snapshots. API queries support concurrent
+reads, but plugins must still follow Bukkit's threading rules for any server operations they perform.
+
+The API does not expose reset triggering, configuration mutation, reset history, scheduler control,
+Multiverse-Core objects, or Worlds objects.
 
 ## Compatibility
 
-Public classes, methods, constructors, enum constants, and their documented semantics remain
-compatible throughout RWR 5.x. Additions may occur in minor releases. Incompatible changes require
-RWR 6.0. Internal runtime packages have no compatibility guarantee.
+The public API remains compatible throughout RWR 5.x. Minor releases may add new functionality;
+removals or incompatible signature changes are reserved for RWR 6.0.
 
-## Build
-
-Requires Java 21 and Maven 3.9 or newer:
-
-```shell
-mvn verify
-```
-
-The `central-release` profile signs and uploads artifacts. It is reserved for the gated release
-workflow, requires Maven Central plus GPG credentials, and refuses to run unless the matching runtime
-release is explicitly confirmed with `-Drwr.runtime.api.ready=true`.
+Licensed under the [BSD 3-Clause License](LICENSE).
