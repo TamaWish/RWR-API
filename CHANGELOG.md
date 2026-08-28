@@ -9,4 +9,4 @@
 - Use provider-neutral public failure names across Multiverse and Worlds runtimes.
 - Deprecate the legacy `getMultiverseWorld()` event aliases in favor of `getWorldName()`.
 
-Publishing remains blocked until the matching ResourceWorldResetter 5.1.0 runtime integration ships.
+> **Note:** This version will be published to Maven only when the matching ResourceWorldResetter 5.1.0 runtime (Spigot + Paper/Folia) that registers the service and emits these events is also released.
