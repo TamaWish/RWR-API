@@ -2,9 +2,6 @@
 
 The stable, read-only integration contract for ResourceWorldResetter 5.1.0 and newer.
 
-> **Release gate:** `5.1.0` must not be published until a matching RWR runtime release registers the
-> service and emits these API-owned events.
-
 ## Dependency
 
 Maven:
