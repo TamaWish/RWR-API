@@ -184,14 +184,14 @@
                         <artifactId>maven-enforcer-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>require-runtime-release-gate</id>
+                                <id>require-api-contract-gate</id>
                                 <goals><goal>enforce</goal></goals>
                                 <configuration>
                                     <rules>
                                         <requireProperty>
-                                            <property>rwr.runtime.api.ready</property>
+                                            <property>rwr.api.contract.ready</property>
                                             <regex>true</regex>
-                                            <message>The matching RWR 5.1 runtime must ship before this API can be published.</message>
+                                            <message>The RWR 5.1 API contract must be final before it can be staged.</message>
                                         </requireProperty>
                                     </rules>
                                 </configuration>
@@ -220,8 +220,8 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <autoPublish>true</autoPublish>
-                            <waitUntil>published</waitUntil>
+                            <autoPublish>false</autoPublish>
+                            <waitUntil>validated</waitUntil>
                         </configuration>
                     </plugin>
                 </plugins>

@@ -1,10 +1,10 @@
-name: Publish to Maven Central
+name: Stage on Maven Central
 
 on:
   workflow_dispatch:
     inputs:
-      confirm_runtime_5_1_ready:
-        description: Confirm the matching RWR runtime API integration is released
+      confirm_api_5_1_contract_ready:
+        description: Confirm the RWR 5.1 API contract is final
         required: true
         type: boolean
 
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   publish:
-    if: ${{ inputs.confirm_runtime_5_1_ready && vars.RWR_RUNTIME_API_READY == 'true' }}
+    if: ${{ inputs.confirm_api_5_1_contract_ready }}
     runs-on: ubuntu-latest
     environment: maven-central
     steps:
@@ -34,8 +34,8 @@ jobs:
           version="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           test "$version" = "5.1.0"
           test "${{ github.ref }}" = "refs/heads/main"
-      - name: Publish signed Central bundle
-        run: mvn --batch-mode --no-transfer-progress -Pcentral-release -Drwr.runtime.api.ready=true deploy
+      - name: Stage signed Central bundle
+        run: mvn --batch-mode --no-transfer-progress -Pcentral-release -Drwr.api.contract.ready=true deploy
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
