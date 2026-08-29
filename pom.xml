@@ -180,6 +180,34 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                        <version>1.7.3</version>
+                        <executions>
+                            <execution>
+                                <id>flatten-central-pom</id>
+                                <phase>process-resources</phase>
+                                <goals><goal>flatten</goal></goals>
+                                <configuration>
+                                    <flattenMode>fatjar</flattenMode>
+                                    <pomElements>
+                                        <name/>
+                                        <description/>
+                                        <url/>
+                                        <inceptionYear/>
+                                        <developers/>
+                                        <scm/>
+                                    </pomElements>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>clean-flattened-central-pom</id>
+                                <phase>clean</phase>
+                                <goals><goal>clean</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
                         <executions>
