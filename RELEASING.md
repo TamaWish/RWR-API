@@ -10,10 +10,16 @@ Maven Central releases are immutable. Perform these steps from a reviewed, clean
 5. Confirm the `maven-central` environment contains `CENTRAL_USERNAME`, `CENTRAL_TOKEN`,
    `GPG_PRIVATE_KEY`, and `GPG_PASSPHRASE` secrets. Never store their values in the repository.
 6. Run the `Stage on Maven Central` workflow and check the contract-ready confirmation.
-7. Review Central Portal validation. The workflow deliberately stages with `autoPublish=false`; use
-   the Portal's Publish action only after validation and artifact inspection.
-8. Wait until `io.github.tamawish:rwr-api:<version>` resolves from Maven Central in a clean cache.
-9. Tag the reviewed commit as `v<version>`, create GitHub release notes, and then release dependent
+7. Copy the deployment ID printed by that exact workflow run. In Central Portal, open that deployment
+   ID and confirm it contains only `io.github.tamawish:rwr-api:<version>`. Do not publish a similarly
+   named or older deployment.
+8. Review Central Portal validation and inspect the staged JAR/sources for the
+   `io.github.tamawish.rwr.api` namespace. The workflow deliberately stages with `autoPublish=false`;
+   use the Portal's Publish action only after these checks.
+9. Wait until `io.github.tamawish:rwr-api:<version>` resolves from Maven Central in a clean cache.
+10. Download the public binary and sources JARs and verify they contain
+   `io/github/tamawish/rwr/api/RwrApi` and no `com/lozaine` API package.
+11. Tag the reviewed commit as `v<version>`, create GitHub release notes, and then release dependent
    RWR projects.
 
 If Central validation fails, drop the staged deployment, correct the project, and stage a new bundle.

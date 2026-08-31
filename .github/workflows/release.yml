@@ -32,8 +32,16 @@ jobs:
         shell: bash
         run: |
           version="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          test "$version" = "5.1.1"
+          test "$version" = "5.1.2"
           test "${{ github.ref }}" = "refs/heads/main"
+      - name: Verify packaged API namespace
+        shell: bash
+        run: |
+          mvn --batch-mode --no-transfer-progress package
+          jar tf target/rwr-api-5.1.2.jar > target/jar-contents.txt
+          grep -qx 'io/github/tamawish/rwr/api/RwrApi.class' target/jar-contents.txt
+          grep -qx 'io/github/tamawish/rwr/api/event/ResourceWorldResetWarningEvent.class' target/jar-contents.txt
+          ! grep -q '^com/lozaine/' target/jar-contents.txt
       - name: Stage signed Central bundle
         run: mvn --batch-mode --no-transfer-progress -Pcentral-release -Drwr.api.contract.ready=true deploy
         env:

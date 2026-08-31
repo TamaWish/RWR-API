@@ -4,8 +4,10 @@ The public, read-only integration API for ResourceWorldResetter 5.1.0 and newer.
 Spigot, Paper, Purpur, and Folia plugins inspect RWR-managed worlds and reset activity without
 depending on RWR's internal implementation or world-provider APIs.
 
-Requires Java 21 and ResourceWorldResetter 5.1.0 or newer on the server. Version 5.1.1 is the first
-public API release; use only the `io.github.tamawish.rwr.api` packages.
+Requires Java 21 and ResourceWorldResetter 5.1.0 or newer on the server. Version 5.1.2 is the first
+supported public API release; use only the `io.github.tamawish.rwr.api` packages. Maven Central 5.1.1
+was withdrawn because it accidentally contained the obsolete `com.lozaine.resourceworldresetter.api`
+package.
 
 ## Add the dependency
 
@@ -15,7 +17,7 @@ Maven:
 <dependency>
   <groupId>io.github.tamawish</groupId>
   <artifactId>rwr-api</artifactId>
-  <version>5.1.1</version>
+  <version>5.1.2</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -24,7 +26,7 @@ Gradle:
 
 ```kotlin
 dependencies {
-    compileOnly("io.github.tamawish:rwr-api:5.1.1")
+    compileOnly("io.github.tamawish:rwr-api:5.1.2")
 }
 ```
 
@@ -68,7 +70,7 @@ The API provides:
 - `ResourceWorldPostResetEvent`, which reports successful, failed, cancelled, and interrupted outcomes.
 
 API 5.1.0 contains snapshots, status, and pre/post lifecycle events. Scheduled warning events were
-added compatibly in API 5.1.1; integrations listening for warnings must compile against 5.1.1.
+added compatibly in API 5.1.2; integrations listening for warnings must compile against 5.1.2.
 
 Warning events contain the RWR world ID, platform world name, whole minutes remaining, and scheduled
 reset `Instant`. They do not have an operation ID because RWR allocates one only when a reset begins.
@@ -104,7 +106,7 @@ Multiverse-Core objects, or Worlds objects.
 
 ## Compatibility
 
-The public compatibility baseline begins at API 5.1.1. The public API remains compatible throughout
+The supported public compatibility baseline begins at API 5.1.2. The public API remains compatible throughout
 RWR 5.x. Minor releases may add methods, event types, or enum constants; consumers should include a
 default branch when switching over enums. Removals, package moves, or incompatible signature changes
 are reserved for RWR 6.0.
