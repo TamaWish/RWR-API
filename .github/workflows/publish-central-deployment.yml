@@ -36,13 +36,19 @@ jobs:
 
           status="$(curl --fail-with-body --silent --show-error \
             --request POST --header "Authorization: Bearer $auth" "$status_url")"
-          jq -e '.deploymentState == "VALIDATED"' <<<"$status"
           jq -e '.purls == ["pkg:maven/io.github.tamawish/rwr-api@5.1.2"]' <<<"$status"
+          initial_state="$(jq -r '.deploymentState' <<<"$status")"
+          case "$initial_state" in
+            VALIDATED)
+              curl --fail-with-body --silent --show-error \
+                --request POST --header "Authorization: Bearer $auth" "$deployment_url"
+              ;;
+            PUBLISHING) echo "Deployment is already publishing; monitoring without resubmitting" ;;
+            PUBLISHED) echo "Deployment is already published"; exit 0 ;;
+            *) echo "Deployment cannot be published from state: $initial_state"; exit 1 ;;
+          esac
 
-          curl --fail-with-body --silent --show-error \
-            --request POST --header "Authorization: Bearer $auth" "$deployment_url"
-
-          for attempt in {1..30}; do
+          for attempt in {1..180}; do
             status="$(curl --fail-with-body --silent --show-error \
               --request POST --header "Authorization: Bearer $auth" "$status_url")"
             state="$(jq -r '.deploymentState' <<<"$status")"
@@ -54,5 +60,5 @@ jobs:
               *) echo "Unexpected deployment state: $state"; exit 1 ;;
             esac
           done
-          echo "Timed out waiting for Central publication"
+          echo "Timed out after 30 minutes waiting for Central publication"
           exit 1
