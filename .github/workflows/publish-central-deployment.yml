@@ -1,0 +1,58 @@
+name: Publish validated Maven Central deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_id:
+        description: Exact validated Central deployment UUID
+        required: true
+        type: string
+      confirm_version:
+        description: Type 5.1.2 to confirm the immutable publication
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: ${{ inputs.confirm_version == '5.1.2' }}
+    runs-on: ubuntu-latest
+    environment: maven-central
+    steps:
+      - name: Verify and publish exact deployment
+        shell: bash
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
+          DEPLOYMENT_ID: ${{ inputs.deployment_id }}
+        run: |
+          set -euo pipefail
+          test "$DEPLOYMENT_ID" = "c40c6dfe-c3ce-4992-a27e-640c1810407c"
+          auth="$(printf '%s:%s' "$CENTRAL_USERNAME" "$CENTRAL_TOKEN" | base64 -w0)"
+          status_url="https://central.sonatype.com/api/v1/publisher/status?id=$DEPLOYMENT_ID"
+          deployment_url="https://central.sonatype.com/api/v1/publisher/deployment/$DEPLOYMENT_ID"
+
+          status="$(curl --fail-with-body --silent --show-error \
+            --request POST --header "Authorization: Bearer $auth" "$status_url")"
+          jq -e '.deploymentState == "VALIDATED"' <<<"$status"
+          jq -e '.purls == ["pkg:maven/io.github.tamawish/rwr-api@5.1.2"]' <<<"$status"
+
+          curl --fail-with-body --silent --show-error \
+            --request POST --header "Authorization: Bearer $auth" "$deployment_url"
+
+          for attempt in {1..30}; do
+            status="$(curl --fail-with-body --silent --show-error \
+              --request POST --header "Authorization: Bearer $auth" "$status_url")"
+            state="$(jq -r '.deploymentState' <<<"$status")"
+            echo "Central deployment state: $state"
+            case "$state" in
+              PUBLISHED) exit 0 ;;
+              FAILED) jq '.errors' <<<"$status"; exit 1 ;;
+              PUBLISHING) sleep 10 ;;
+              *) echo "Unexpected deployment state: $state"; exit 1 ;;
+            esac
+          done
+          echo "Timed out waiting for Central publication"
+          exit 1
