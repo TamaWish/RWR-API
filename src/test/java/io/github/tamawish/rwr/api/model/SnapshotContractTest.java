@@ -1,4 +1,4 @@
-package com.lozaine.resourceworldresetter.api.model;
+package io.github.tamawish.rwr.api.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

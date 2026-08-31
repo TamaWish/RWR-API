@@ -1,14 +1,50 @@
-package com.lozaine.resourceworldresetter.api.event;
+package io.github.tamawish.rwr.api.event;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.lozaine.resourceworldresetter.api.model.FailureSafety;
-import com.lozaine.resourceworldresetter.api.model.ResetFailureType;
-import com.lozaine.resourceworldresetter.api.model.ResetPhase;
+import io.github.tamawish.rwr.api.model.FailureSafety;
+import io.github.tamawish.rwr.api.model.ResetFailureType;
+import io.github.tamawish.rwr.api.model.ResetPhase;
+import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
 class ResetEventContractTest {
+    @Test
+    void warningEventCarriesScheduleWithoutAnOperation() {
+        Instant scheduledResetAt = Instant.parse("2026-08-29T12:00:00Z");
+        ResourceWorldResetWarningEvent event = new ResourceWorldResetWarningEvent(
+                "resource", "resource_world", 5, scheduledResetAt);
+
+        assertThat(event.getWorldId()).isEqualTo("resource");
+        assertThat(event.getWorldName()).isEqualTo("resource_world");
+        assertThat(event.getMinutesRemaining()).isEqualTo(5);
+        assertThat(event.getScheduledResetAt()).isEqualTo(scheduledResetAt);
+        assertThat(event.isAsynchronous()).isFalse();
+        assertThat(event.getHandlers()).isSameAs(ResourceWorldResetWarningEvent.getHandlerList());
+    }
+
+    @Test
+    void warningEventAllowsZeroMinutes() {
+        ResourceWorldResetWarningEvent event = new ResourceWorldResetWarningEvent(
+                "resource", "resource_world", 0, Instant.EPOCH);
+
+        assertThat(event.getMinutesRemaining()).isZero();
+    }
+
+    @Test
+    void warningEventRejectsInvalidValues() {
+        assertThatThrownBy(() -> new ResourceWorldResetWarningEvent(
+                        " ", "resource_world", 5, Instant.EPOCH))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ResourceWorldResetWarningEvent(
+                        "resource", "resource_world", -1, Instant.EPOCH))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new ResourceWorldResetWarningEvent(
+                        "resource", "resource_world", 5, null))
+                .isInstanceOf(NullPointerException.class);
+    }
+
     @Test
     void preResetEventCanBeCancelled() {
         ResourceWorldPreResetEvent event = new ResourceWorldPreResetEvent("operation", "resource", "resource_world");

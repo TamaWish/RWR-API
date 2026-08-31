@@ -1,4 +1,4 @@
-package com.lozaine.resourceworldresetter.api.model;
+package io.github.tamawish.rwr.api.model;
 
 /** Public reset lifecycle phase. */
 public enum ResetPhase {

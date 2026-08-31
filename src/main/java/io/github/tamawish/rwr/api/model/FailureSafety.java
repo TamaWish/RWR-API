@@ -1,4 +1,4 @@
-package com.lozaine.resourceworldresetter.api.model;
+package io.github.tamawish.rwr.api.model;
 
 /** Indicates whether retrying after an unsuccessful operation is safe. */
 public enum FailureSafety {

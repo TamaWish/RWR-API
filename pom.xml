@@ -6,7 +6,7 @@
 
     <groupId>io.github.tamawish</groupId>
     <artifactId>rwr-api</artifactId>
-    <version>5.1.0</version>
+    <version>5.1.1</version>
     <packaging>jar</packaging>
 
     <name>ResourceWorldResetter API</name>
@@ -42,7 +42,7 @@
         <project.build.outputTimestamp>2026-08-28T00:00:00Z</project.build.outputTimestamp>
         <spigot.version>1.21.4-R0.1-SNAPSHOT</spigot.version>
         <junit.version>5.12.1</junit.version>
-        <assertj.version>3.27.3</assertj.version>
+        <assertj.version>3.27.7</assertj.version>
     </properties>
 
     <repositories>
@@ -105,7 +105,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>com.lozaine.resourceworldresetter.api</Automatic-Module-Name>
+                            <Automatic-Module-Name>io.github.tamawish.rwr.api</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>

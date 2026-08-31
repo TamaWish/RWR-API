@@ -1,4 +1,4 @@
-package com.lozaine.resourceworldresetter.api.model;
+package io.github.tamawish.rwr.api.model;
 
 /** Stable categories for unsuccessful reset attempts. */
 public enum ResetFailureType {

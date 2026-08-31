@@ -1,7 +1,11 @@
 /target/
+/.flattened-pom.xml
 /.idea/
 *.iml
 *.log
 .classpath
 .project
 .settings/
+
+# Marketplace paste files (description + changelog per channel)
+/docs/marketplace/

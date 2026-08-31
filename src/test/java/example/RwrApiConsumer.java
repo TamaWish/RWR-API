@@ -1,7 +1,7 @@
 package example;
 
-import com.lozaine.resourceworldresetter.api.RwrApi;
-import com.lozaine.resourceworldresetter.api.event.ResourceWorldPostResetEvent;
+import io.github.tamawish.rwr.api.RwrApi;
+import io.github.tamawish.rwr.api.event.ResourceWorldPostResetEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;

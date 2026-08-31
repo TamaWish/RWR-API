@@ -1,8 +1,8 @@
-package com.lozaine.resourceworldresetter.api.event;
+package io.github.tamawish.rwr.api.event;
 
-import com.lozaine.resourceworldresetter.api.model.FailureSafety;
-import com.lozaine.resourceworldresetter.api.model.ResetFailureType;
-import com.lozaine.resourceworldresetter.api.model.ResetPhase;
+import io.github.tamawish.rwr.api.model.FailureSafety;
+import io.github.tamawish.rwr.api.model.ResetFailureType;
+import io.github.tamawish.rwr.api.model.ResetPhase;
 import java.util.Objects;
 import java.util.Optional;
 import org.bukkit.event.Event;

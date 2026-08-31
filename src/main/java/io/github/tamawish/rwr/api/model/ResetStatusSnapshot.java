@@ -1,4 +1,4 @@
-package com.lozaine.resourceworldresetter.api.model;
+package io.github.tamawish.rwr.api.model;
 
 import java.util.Objects;
 import java.util.Optional;

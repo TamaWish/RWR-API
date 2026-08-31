@@ -17,22 +17,22 @@ jobs:
     runs-on: ubuntu-latest
     environment: maven-central
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
           server-id: central
-          server-username: CENTRAL_USERNAME
-          server-password: CENTRAL_TOKEN
+          server-username-env-var: CENTRAL_USERNAME
+          server-password-env-var: CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: GPG_PASSPHRASE
+          gpg-passphrase-env-var: MAVEN_GPG_PASSPHRASE
       - name: Verify release version
         shell: bash
         run: |
           version="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          test "$version" = "5.1.0"
+          test "$version" = "5.1.1"
           test "${{ github.ref }}" = "refs/heads/main"
       - name: Stage signed Central bundle
         run: mvn --batch-mode --no-transfer-progress -Pcentral-release -Drwr.api.contract.ready=true deploy

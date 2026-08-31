@@ -1,4 +1,4 @@
-package com.lozaine.resourceworldresetter.api.model;
+package io.github.tamawish.rwr.api.model;
 
 /** Operational state assigned to a world by RWR's validated configuration. */
 public enum ManagedWorldState {

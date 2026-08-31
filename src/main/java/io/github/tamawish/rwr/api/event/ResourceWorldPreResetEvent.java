@@ -1,4 +1,4 @@
-package com.lozaine.resourceworldresetter.api.event;
+package io.github.tamawish.rwr.api.event;
 
 import java.util.Objects;
 import org.bukkit.event.Cancellable;

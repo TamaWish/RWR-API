@@ -1,7 +1,7 @@
-package com.lozaine.resourceworldresetter.api;
+package io.github.tamawish.rwr.api;
 
-import com.lozaine.resourceworldresetter.api.model.ManagedWorldSnapshot;
-import com.lozaine.resourceworldresetter.api.model.ResetStatusSnapshot;
+import io.github.tamawish.rwr.api.model.ManagedWorldSnapshot;
+import io.github.tamawish.rwr.api.model.ResetStatusSnapshot;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
