@@ -36,10 +36,10 @@ jobs:
 
           status="$(curl --fail-with-body --silent --show-error \
             --request POST --header "Authorization: Bearer $auth" "$status_url")"
-          jq -e '.purls == ["pkg:maven/io.github.tamawish/rwr-api@5.1.2"]' <<<"$status"
           initial_state="$(jq -r '.deploymentState' <<<"$status")"
           case "$initial_state" in
             VALIDATED)
+              jq -e '.purls == ["pkg:maven/io.github.tamawish/rwr-api@5.1.2"]' <<<"$status"
               curl --fail-with-body --silent --show-error \
                 --request POST --header "Authorization: Bearer $auth" "$deployment_url"
               ;;
